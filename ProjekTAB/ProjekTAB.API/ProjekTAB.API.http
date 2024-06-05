@@ -1,6 +1,0 @@
-@ProjekTAB.API_HostAddress = http://localhost:5117
-
-GET {{ProjekTAB.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

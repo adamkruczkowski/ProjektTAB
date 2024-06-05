@@ -1,0 +1,35 @@
+Clients:
+	id: a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536
+	name: Lukasz
+	email: lukasz@wp.pl
+	login: lukasz
+	password: lukasz
+	surname: Jarzab
+	age: 23
+	phone: 111222333
+
+	id: f1e1eb58-18a0-4617-a281-fb36e4a67cc2
+	name: Jan
+	email: jan@wp.pl
+	login: jan
+	password: jan
+	surname: Samiec
+	age: 23
+	phone: 222333444
+
+BankingAccounts:
+	id: a099766e-075e-4696-91ed-3fa39c745051
+	number: 11111222223333344444555556
+	id_client: a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536 // Lukasz
+	amount: 100.00
+
+	id: e3df980b-f905-4595-b3ac-3ac2b1b7c4ca
+	number: 22222333334444455555666667
+	id_client: f1e1eb58-18a0-4617-a281-fb36e4a67cc2 // Jan
+	amount: 350.19
+
+Logins:
+	id: 377c0de6-fefe-4169-b42f-3ffbc70c9965
+	id_client: a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536
+	successful: true
+	datetime: DateTime.Now
