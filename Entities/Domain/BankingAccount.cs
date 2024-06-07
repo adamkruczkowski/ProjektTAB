@@ -9,7 +9,7 @@
 
         public Guid Id_client {  get; set; }
         public Client Client { get; set; }
-        public List<Transaction> Senders { get; set; }
-        public List<Transaction> Recipients { get; set; }
+        public List<Transaction> T_Received { get; set; }
+        public List<Transaction> T_Sent { get; set; }
     }
 }

@@ -16,8 +16,20 @@ builder.Services.AddDbContext<PolBankDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("PolBankConnectionString")));
 
 builder.Services.AddScoped<IClientRepository, SQLClientRepository>();
+builder.Services.AddScoped<ITransactionRepository, SQLTransactionRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAll",
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                      });
+});
 
 var app = builder.Build();
 
@@ -29,7 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();

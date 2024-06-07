@@ -34,13 +34,13 @@ namespace ProjektTabAPI.Data
             // Transaction to BankingAccount (many-to-one for both sender and recipient)
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Sender)
-                .WithMany(ba => ba.Senders)
+                .WithMany(ba => ba.T_Received)
                 .HasForeignKey(t => t.Sender_BAId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Recipient)
-                .WithMany(ba => ba.Recipients)
+                .WithMany(ba => ba.T_Sent)
                 .HasForeignKey(t => t.Recipient_BAId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
