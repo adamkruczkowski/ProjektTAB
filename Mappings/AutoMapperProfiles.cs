@@ -18,6 +18,7 @@ namespace ProjektTabAPI.Mappings
             CreateMap<Login, LoginSimpleDto>().ReverseMap();
             CreateMap<BankingAccount, BankingAccountSimpleDto>().ReverseMap();
             CreateMap<BankingAccount, BankingAccountDto>().ReverseMap();    
+            CreateMap<BankingAccount, AddBankingAccountDto>().ReverseMap();
 
             CreateMap<Transaction, TransactionDto>().ReverseMap();
         }

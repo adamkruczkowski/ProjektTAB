@@ -17,6 +17,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("PolBankConnectio
 
 builder.Services.AddScoped<IClientRepository, SQLClientRepository>();
 builder.Services.AddScoped<ITransactionRepository, SQLTransactionRepository>();
+builder.Services.AddScoped<IBankingAccountRepository, SQLBankingAccountRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

@@ -25,7 +25,7 @@ namespace ProjektTabAPI.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var transaction = await transactionRepository.GetById(id);
             if (transaction is null)
@@ -37,7 +37,7 @@ namespace ProjektTabAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AddTransactionRequestDto transactionDto)
+        public async Task<IActionResult> Create([FromBody] AddTransactionRequestDto transactionDto)
         {
             var transaction = mapper.Map<Transaction>(transactionDto);
             var addedTransaction = await transactionRepository.Create(transaction);
