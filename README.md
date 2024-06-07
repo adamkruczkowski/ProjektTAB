@@ -1,5 +1,9 @@
 ## Configuration
-`application.json` must have
+Nalezy pobrac baze danych Sql Server 2022 od Microsoft
+
+Trzeba stworzyc plik `appsettings.json`w glownym katalogu i wkleic ponizsza zawartosc WRAZ z wypelnionym polem YOUR_SERVER.
+Do pola nalezy wkleic wartosc "Server name" z pola logowania do bazy SSMS (konfigurowalo sie podczas instalacji)
+Domyslnie jest chyba "localhost\MSSQLSERVER01"
 ```
 {
   "Logging": {
@@ -10,7 +14,7 @@
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "PolBankConnectionString": "Server=localhost\\{YOUR_SERVER};Database=PolBankDb;Trusted_Connection=True;TrustServerCertificate=True"
+    "PolBankConnectionString": "Server={YOUR_SERVER_NAME_};Database=PolBankDb;Trusted_Connection=True;TrustServerCertificate=True"
   }
 }
 
