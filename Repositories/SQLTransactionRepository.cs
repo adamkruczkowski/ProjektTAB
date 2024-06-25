@@ -28,5 +28,20 @@ namespace ProjektTabAPI.Repositories
             await dbContext.SaveChangesAsync();
             return transaction;
         }
+        
+        public async Task<List<Transaction>> GetAllByBAId(Guid BA_id)
+        {
+            return await dbContext.Transactions.Where(t => t.Sender_BAId == BA_id || t.Recipient_BAId == BA_id).Include(t => t.Sender).ThenInclude(ba => ba.Client).Include(t => t.Recipient).ThenInclude(ba => ba.Client).ToListAsync();
+        }
+
+        public async Task<List<Transaction>> GetSentByBAId(Guid BA_id)
+        {
+            return await dbContext.Transactions.Where(t => t.Sender_BAId == BA_id).Include(t => t.Sender).ThenInclude(ba => ba.Client).Include(t => t.Recipient).ThenInclude(ba => ba.Client).ToListAsync();
+        }
+
+        public async Task<List<Transaction>> GetReceivedByBAId(Guid BA_id)
+        {
+            return await dbContext.Transactions.Where(t => t.Recipient_BAId == BA_id).Include(t => t.Sender).ThenInclude(ba => ba.Client).Include(t => t.Recipient).ThenInclude(ba => ba.Client).ToListAsync();
+        }
     }
 }

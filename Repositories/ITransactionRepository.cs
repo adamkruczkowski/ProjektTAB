@@ -8,5 +8,8 @@ namespace ProjektTabAPI.Repositories
         Task<List<Transaction>> GetAll();
         Task<Transaction?> GetById(Guid id);
         Task<Transaction> Create(Transaction transaction);
+        Task<List<Transaction>> GetAllByBAId(Guid BA_id);
+        Task<List<Transaction>> GetSentByBAId(Guid BA_id);
+        Task<List<Transaction>> GetReceivedByBAId(Guid BA_id);
     }
 }

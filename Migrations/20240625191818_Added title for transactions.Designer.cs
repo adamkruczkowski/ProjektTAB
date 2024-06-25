@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjektTabAPI.Data;
 
@@ -11,9 +12,11 @@ using ProjektTabAPI.Data;
 namespace ProjektTabAPI.Migrations
 {
     [DbContext(typeof(PolBankDbContext))]
-    partial class PolBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240625191818_Added title for transactions")]
+    partial class Addedtitlefortransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

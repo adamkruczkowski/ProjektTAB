@@ -113,7 +113,8 @@ namespace ProjektTabAPI.Data
                     Sender_BAId = Guid.Parse("a099766e-075e-4696-91ed-3fa39c745051"), // Lukasz
                     Recipient_BAId = Guid.Parse("e3df980b-f905-4595-b3ac-3ac2b1b7c4ca"), // Jan
                     Balance_before = 200.00m,
-                    Amount = 100.00m
+                    Amount = 100.00m,
+                    Title = "Impreza urodzinowa"
                 }
             };
             modelBuilder.Entity<Transaction>().HasData(transactions);

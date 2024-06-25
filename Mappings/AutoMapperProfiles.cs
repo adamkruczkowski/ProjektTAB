@@ -21,6 +21,7 @@ namespace ProjektTabAPI.Mappings
             CreateMap<BankingAccount, AddBankingAccountDto>().ReverseMap();
 
             CreateMap<Transaction, TransactionDto>().ReverseMap();
+            CreateMap<Transaction, AddTransactionRequestDto>().ReverseMap();
         }
     }
 }

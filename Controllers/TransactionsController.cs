@@ -48,5 +48,44 @@ namespace ProjektTabAPI.Controllers
             var addedTransactionDto = mapper.Map<TransactionDto>(addedTransaction);
             return Ok(addedTransactionDto);
         }
+
+        [HttpGet]
+        [Route("BankingAccount/all/{BA_id:Guid}")]
+        public async Task<IActionResult> GetAllByBAId([FromRoute] Guid BA_id)
+        {
+            var transactions = await transactionRepository.GetAllByBAId(BA_id);
+            if (transactions is null)
+            {
+                return NotFound();
+            }
+            var transactionsDto = mapper.Map<List<TransactionDto>>(transactions);
+            return Ok(transactionsDto);
+        }
+
+        [HttpGet]
+        [Route("BankingAccount/sent/{BA_id:Guid}")]
+        public async Task<IActionResult> GetSendByBAId([FromRoute] Guid BA_id)
+        {
+            var transactions = await transactionRepository.GetSentByBAId(BA_id);
+            if (transactions is null)
+            {
+                return NotFound();
+            }
+            var transactionsDto = mapper.Map<List<TransactionDto>>(transactions);
+            return Ok(transactionsDto);
+        }
+
+        [HttpGet]
+        [Route("BankingAccount/received/{BA_id:Guid}")]
+        public async Task<IActionResult> GetReceivedByBAId([FromRoute] Guid BA_id)
+        {
+            var transactions = await transactionRepository.GetReceivedByBAId(BA_id);
+            if (transactions is null)
+            {
+                return NotFound();
+            }
+            var transactionsDto = mapper.Map<List<TransactionDto>>(transactions);
+            return Ok(transactionsDto);
+        }
     }
 }
