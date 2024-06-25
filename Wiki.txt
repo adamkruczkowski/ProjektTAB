@@ -33,3 +33,19 @@ Logins:
 	id_client: a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536
 	successful: true
 	datetime: DateTime.Now
+
+Transactions:
+	id: 9bd4d73a-83c9-441f-e60e-08dc954fe568
+    balance_before: 200
+    amount: 250
+    title: "Za zegarek, jeszcze raz dzieki :)"
+    sender_BAId: e3df980b-f905-4595-b3ac-3ac2b1b7c4ca
+    recipient_BAId: a099766e-075e-4696-91ed-3fa39c745051
+
+	id: 94a62f27-05c6-4308-b5cf-b23ef5a33ee8
+    balance_before: 200
+    amount: 100
+    title: "Impreza urodzinowa"
+    sender_BAId: a099766e-075e-4696-91ed-3fa39c745051
+    recipient_BAId: e3df980b-f905-4595-b3ac-3ac2b1b7c4ca
+ 
