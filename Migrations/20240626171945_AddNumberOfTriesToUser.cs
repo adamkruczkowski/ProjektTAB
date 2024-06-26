@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjektTabAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class AddNumberOfTriesToUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,9 @@ namespace ProjektTabAPI.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumberOfTries = table.Column<int>(type: "int", nullable: false),
+                    Blocked = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,6 +81,7 @@ namespace ProjektTabAPI.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Balance_before = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sender_BAId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Recipient_BAId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -100,11 +103,11 @@ namespace ProjektTabAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Clients",
-                columns: new[] { "Id", "Age", "Email", "Login", "Name", "Password", "Phone", "Surname" },
+                columns: new[] { "Id", "Age", "Blocked", "Email", "Login", "Name", "NumberOfTries", "Password", "Phone", "Surname" },
                 values: new object[,]
                 {
-                    { new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"), 23, "lukasz@wp.pl", "lukasz", "Lukasz", "lukasz", "111222333", "Jarzab" },
-                    { new Guid("f1e1eb58-18a0-4617-a281-fb36e4a67cc2"), 23, "jan@wp.pl", "jan", "Jan", "jan", "222333444", "Samiec" }
+                    { new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"), 23, false, "lukasz@wp.pl", "lukasz", "Lukasz", 0, "lukasz", "111222333", "Jarzab" },
+                    { new Guid("f1e1eb58-18a0-4617-a281-fb36e4a67cc2"), 23, false, "jan@wp.pl", "jan", "Jan", 0, "jan", "222333444", "Samiec" }
                 });
 
             migrationBuilder.InsertData(
@@ -119,12 +122,12 @@ namespace ProjektTabAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Logins",
                 columns: new[] { "Id", "DateTime", "Id_Client", "Successful" },
-                values: new object[] { new Guid("377c0de6-fefe-4169-b42f-3ffbc70c9965"), new DateTime(2024, 6, 5, 18, 10, 14, 167, DateTimeKind.Local).AddTicks(6946), new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"), true });
+                values: new object[] { new Guid("377c0de6-fefe-4169-b42f-3ffbc70c9965"), new DateTime(2024, 6, 26, 19, 19, 44, 595, DateTimeKind.Local).AddTicks(5015), new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"), true });
 
             migrationBuilder.InsertData(
                 table: "Transactions",
-                columns: new[] { "Id", "Amount", "Balance_before", "Recipient_BAId", "Sender_BAId" },
-                values: new object[] { new Guid("94a62f27-05c6-4308-b5cf-b23ef5a33ee8"), 100.00m, 200.00m, new Guid("e3df980b-f905-4595-b3ac-3ac2b1b7c4ca"), new Guid("a099766e-075e-4696-91ed-3fa39c745051") });
+                columns: new[] { "Id", "Amount", "Balance_before", "Recipient_BAId", "Sender_BAId", "Title" },
+                values: new object[] { new Guid("94a62f27-05c6-4308-b5cf-b23ef5a33ee8"), 100.00m, 200.00m, new Guid("e3df980b-f905-4595-b3ac-3ac2b1b7c4ca"), new Guid("a099766e-075e-4696-91ed-3fa39c745051"), "Impreza urodzinowa" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BankingAccounts_Id_client",

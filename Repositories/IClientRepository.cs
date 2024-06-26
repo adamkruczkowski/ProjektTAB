@@ -6,5 +6,7 @@ namespace ProjektTabAPI.Repositories
     {
         Task<Client?> GetClientByLogin(string login);
         Task<Client?> GetClientById(Guid id);
+
+        Task<int> SaveChangesAsync();
     }
 }

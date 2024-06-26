@@ -7,7 +7,7 @@ namespace ProjektTabAPI.Data
     {
         public PolBankDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-            
+
         }
 
         public DbSet<Client> Clients { get; set; }
@@ -56,6 +56,8 @@ namespace ProjektTabAPI.Data
                     Password = "lukasz",
                     Age = 23,
                     Phone = "111222333",
+                    Blocked = false,
+                    NumberOfTries = 0,
                     Surname = "Jarzab"
                 },
                 new()
@@ -67,6 +69,8 @@ namespace ProjektTabAPI.Data
                     Password = "jan",
                     Age = 23,
                     Phone = "222333444",
+                    Blocked = false,
+                    NumberOfTries = 0,
                     Surname = "Samiec"
                 },
             };

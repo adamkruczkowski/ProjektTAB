@@ -22,7 +22,6 @@ namespace ProjektTabAPI.Repositories
             }
             return foundClient;
         }
-
         public async Task<Client?> GetClientByLogin(string login)
         {
             var foundClient = await dbContext.Clients.FirstOrDefaultAsync(c => c.Login == login);
@@ -31,6 +30,11 @@ namespace ProjektTabAPI.Repositories
                 return null;
             }
             return foundClient;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await dbContext.SaveChangesAsync();
         }
     }
 }

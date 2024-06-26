@@ -15,13 +15,28 @@ namespace ProjektTabAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginCredentialsDto loginCredencials)
         {
             var foundClient = await clientRepository.GetClientByLogin(loginCredencials.Login);
+
             if (foundClient is null)
             {
                 return NotFound("Nie znaleziono użytkownika z podanym loginem");
             }
+
+            if (foundClient.NumberOfTries == 5)
+            {
+                foundClient.Blocked = true;
+                await clientRepository.SaveChangesAsync();
+            }
+
+            if (foundClient.Blocked)
+            {
+                return Unauthorized("Twoje konto zostało zablokowane");
+            }
+
             if (foundClient.Password == loginCredencials.Password)
             {
                 var foundClientDto = mapper.Map<ClientSimpleDto>(foundClient);
+                foundClient.NumberOfTries = 0;
+                await clientRepository.SaveChangesAsync();
                 return Ok(foundClientDto);
 
                 // 2FA
@@ -29,7 +44,9 @@ namespace ProjektTabAPI.Controllers
             }
             else
             {
-                return BadRequest("Niepoprawne hasło");
+                foundClient.NumberOfTries++;
+                await clientRepository.SaveChangesAsync();
+                return BadRequest($"Niepoprawne hasło pozostało {5 - foundClient.NumberOfTries} prób logowania.");
             }
         }
     }

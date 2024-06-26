@@ -75,6 +75,9 @@ namespace ProjektTabAPI.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Blocked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -86,6 +89,9 @@ namespace ProjektTabAPI.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfTries")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -108,9 +114,11 @@ namespace ProjektTabAPI.Migrations
                         {
                             Id = new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"),
                             Age = 23,
+                            Blocked = false,
                             Email = "lukasz@wp.pl",
                             Login = "lukasz",
                             Name = "Lukasz",
+                            NumberOfTries = 0,
                             Password = "lukasz",
                             Phone = "111222333",
                             Surname = "Jarzab"
@@ -119,9 +127,11 @@ namespace ProjektTabAPI.Migrations
                         {
                             Id = new Guid("f1e1eb58-18a0-4617-a281-fb36e4a67cc2"),
                             Age = 23,
+                            Blocked = false,
                             Email = "jan@wp.pl",
                             Login = "jan",
                             Name = "Jan",
+                            NumberOfTries = 0,
                             Password = "jan",
                             Phone = "222333444",
                             Surname = "Samiec"
@@ -153,7 +163,7 @@ namespace ProjektTabAPI.Migrations
                         new
                         {
                             Id = new Guid("377c0de6-fefe-4169-b42f-3ffbc70c9965"),
-                            DateTime = new DateTime(2024, 6, 25, 21, 18, 17, 295, DateTimeKind.Local).AddTicks(8047),
+                            DateTime = new DateTime(2024, 6, 26, 19, 19, 44, 595, DateTimeKind.Local).AddTicks(5015),
                             Id_Client = new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"),
                             Successful = true
                         });

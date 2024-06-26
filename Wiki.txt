@@ -7,6 +7,8 @@ Clients:
 	surname: Jarzab
 	age: 23
 	phone: 111222333
+	blocked: false
+	numberOfTries: 0
 
 	id: f1e1eb58-18a0-4617-a281-fb36e4a67cc2
 	name: Jan
@@ -16,6 +18,8 @@ Clients:
 	surname: Samiec
 	age: 23
 	phone: 222333444
+	blocked: false
+	numberOfTries: 0
 
 BankingAccounts:
 	id: a099766e-075e-4696-91ed-3fa39c745051
