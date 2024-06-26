@@ -18,4 +18,5 @@ Domyslnie jest chyba "localhost\MSSQLSERVER01"
   }
 }
 
+UWAZAC NA PORT ORAZ CZY JEST HTTP CZY HTTPS
 ```
