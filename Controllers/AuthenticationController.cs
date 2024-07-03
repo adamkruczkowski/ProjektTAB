@@ -1,20 +1,42 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Net.Mail;
+using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ProjektTabAPI.Entities.Domain;
 using ProjektTabAPI.Entities.Dtos.Client;
 using ProjektTabAPI.Repositories;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ProjektTabAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(IMapper mapper, IClientRepository clientRepository) : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
+        private readonly IMapper _mapper;
+        private readonly IClientRepository _clientRepository;
+        private readonly IVerificationCodeRepository _verificationCodeRepository;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthenticationController> _logger;
+        private static readonly bool _is2FAEnabled = false;
+
+        public AuthenticationController(IMapper mapper, IClientRepository clientRepository, IVerificationCodeRepository verificationCodeRepository, IConfiguration configuration, ILogger<AuthenticationController> logger)
+        {
+            _mapper = mapper;
+            _clientRepository = clientRepository;
+            _verificationCodeRepository = verificationCodeRepository;
+            _configuration = configuration;
+            _logger = logger;
+        }
+
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginCredentialsDto loginCredencials)
+        public async Task<IActionResult> Login([FromBody] LoginCredentialsDto loginCredentials)
         {
-            var foundClient = await clientRepository.GetClientByLogin(loginCredencials.Login);
+            var foundClient = await _clientRepository.GetClientByLogin(loginCredentials.Login);
 
             if (foundClient is null)
             {
@@ -24,7 +46,7 @@ namespace ProjektTabAPI.Controllers
             if (foundClient.NumberOfTries == 5)
             {
                 foundClient.Blocked = true;
-                await clientRepository.SaveChangesAsync();
+                await _clientRepository.SaveChangesAsync();
             }
 
             if (foundClient.Blocked)
@@ -32,22 +54,98 @@ namespace ProjektTabAPI.Controllers
                 return Unauthorized("Twoje konto zostało zablokowane");
             }
 
-            if (foundClient.Password == loginCredencials.Password)
+            if (foundClient.Password == loginCredentials.Password)
             {
-                var foundClientDto = mapper.Map<ClientSimpleDto>(foundClient);
-                foundClient.NumberOfTries = 0;
-                await clientRepository.SaveChangesAsync();
-                return Ok(foundClientDto);
+                if (_is2FAEnabled)
+                {
+                    // Generate 2FA code
+                    var verificationCode = GenerateVerificationCode();
+                    await _verificationCodeRepository.SaveVerificationCode(foundClient.Id, verificationCode);
 
-                // 2FA
-                //return Ok($"Wysłano na twoją skrzynkę pocztową {foundClient.Email} wiadomość. Przepisz otrzymane cyfry aby kontynuować.");
+                    // Send email with the code
+                    SendVerificationCodeByEmail(foundClient.Email, verificationCode);
+
+                    // Return message for 2FA
+                    return Ok($"Wysłano na twoją skrzynkę pocztową {foundClient.Email} wiadomość. Przepisz otrzymane cyfry aby kontynuować.");
+                }
+                else
+                {
+                    var foundClientDto = _mapper.Map<ClientSimpleDto>(foundClient);
+                    foundClient.NumberOfTries = 0;
+                    await _clientRepository.SaveChangesAsync();
+                    return Ok(foundClientDto);
+                }
             }
             else
             {
                 foundClient.NumberOfTries++;
-                await clientRepository.SaveChangesAsync();
+                await _clientRepository.SaveChangesAsync();
                 return BadRequest($"Niepoprawne hasło pozostało {5 - foundClient.NumberOfTries} prób logowania.");
             }
+        }
+
+        private string GenerateVerificationCode()
+        {
+            var random = new Random();
+            var code = new StringBuilder(6);
+            for (int i = 0; i < 6; i++)
+            {
+                code.Append(random.Next(0, 10));
+            }
+            return code.ToString();
+        }
+
+        private void SendVerificationCodeByEmail(string email, string code)
+        {
+            var smtpSettings = _configuration.GetSection("Smtp");
+
+            using (var smtpClient = new SmtpClient(smtpSettings["Host"], int.Parse(smtpSettings["Port"])))
+            {
+                smtpClient.Credentials = new System.Net.NetworkCredential(smtpSettings["Username"], smtpSettings["Password"]);
+                smtpClient.EnableSsl = bool.Parse(smtpSettings["EnableSsl"]);
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(smtpSettings["FromEmail"]),
+                    Subject = "Your verification code",
+                    Body = $"Your verification code is {code}",
+                    IsBodyHtml = true,
+            };
+                mailMessage.To.Add(email);
+                smtpClient.Send(mailMessage);
+            }
+        }
+        [HttpPost]
+        [Route("verify-code")]
+        public async Task<IActionResult> VerifyCode([FromBody] VerifyCodeDto verifyCodeDto)
+        {
+            var foundClient = await _clientRepository.GetClientByLogin(verifyCodeDto.Login);
+            if (foundClient == null)
+            {
+                return NotFound("Client not found with the provided login.");
+            }
+
+            var storedCode = await _verificationCodeRepository.GetVerificationCode(foundClient.Id);
+            _logger.LogInformation($"Stored Code: {storedCode}");
+
+            if (storedCode == verifyCodeDto.Code)
+            {
+                var foundClientDto = _mapper.Map<ClientSimpleDto>(foundClient);
+                foundClient.NumberOfTries = 0;
+                await _clientRepository.SaveChangesAsync();
+                return Ok(foundClientDto);
+            }
+            else
+            {
+                return BadRequest("Invalid verification code.");
+            }
+        }
+
+        [HttpGet]
+        [Route("is-2fa-enabled")]
+        public IActionResult Is2FAEnabled()
+        {
+            return Ok(new { is2FAEnabled = _is2FAEnabled });
         }
     }
 }
