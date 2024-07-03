@@ -14,6 +14,7 @@ namespace ProjektTabAPI.Data
         public DbSet<Login> Logins { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<BankingAccount> BankingAccounts { get; set; }
+        public DbSet<VerificationCode> VerificationCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,14 @@ namespace ProjektTabAPI.Data
                 .WithMany(ba => ba.T_Sent)
                 .HasForeignKey(t => t.Recipient_BAId)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
+            // Configure VerificationCode entity
+            modelBuilder.Entity<VerificationCode>()
+                .HasKey(vc => vc.Id);
+
+            modelBuilder.Entity<VerificationCode>()
+                .HasIndex(vc => vc.ClientId)
+                .IsUnique(false);
 
             // Seeding
             var clients = new List<Client>()
