@@ -28,5 +28,10 @@ namespace ProjektTabAPI.Repositories
         {
             return await dbContext.BankingAccounts.Include(ba => ba.Client).FirstOrDefaultAsync(ba => ba.Id == id);
         }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await dbContext.SaveChangesAsync();
+        }
     }
 }

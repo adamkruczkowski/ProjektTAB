@@ -11,5 +11,7 @@ namespace ProjektTabAPI.Repositories
         Task<List<Transaction>> GetAllByBAId(Guid BA_id);
         Task<List<Transaction>> GetSentByBAId(Guid BA_id);
         Task<List<Transaction>> GetReceivedByBAId(Guid BA_id);
+
+        Task<int> DoTransfer(BankingAccount sender, BankingAccount reciepier, decimal amount);
     }
 }

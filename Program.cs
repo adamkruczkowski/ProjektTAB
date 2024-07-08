@@ -19,7 +19,7 @@ builder.Services.AddScoped<IClientRepository, SQLClientRepository>();
 builder.Services.AddScoped<ITransactionRepository, SQLTransactionRepository>();
 builder.Services.AddScoped<IBankingAccountRepository, SQLBankingAccountRepository>();
 builder.Services.AddScoped<IVerificationCodeRepository, SQLVerificationCodeRepository>();
-
+builder.Services.AddScoped<ILoginRepository, SQLLoginRepository>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddCors(options =>

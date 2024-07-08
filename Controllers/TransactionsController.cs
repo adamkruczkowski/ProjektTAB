@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjektTabAPI.Data;
 using ProjektTabAPI.Entities.Domain;
 using ProjektTabAPI.Entities.Dtos.Transaction;
 using ProjektTabAPI.Repositories;
@@ -9,8 +10,9 @@ namespace ProjektTabAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionsController(IMapper mapper, ITransactionRepository transactionRepository) : ControllerBase
+    public class TransactionsController(IMapper mapper, ITransactionRepository transactionRepository, IClientRepository clientRepository, IBankingAccountRepository bankingRepository) : ControllerBase
     {
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -39,13 +41,50 @@ namespace ProjektTabAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddTransactionRequestDto transactionDto)
         {
-            var transaction = mapper.Map<Transaction>(transactionDto);
-            var addedTransaction = await transactionRepository.Create(transaction);
-            if (addedTransaction is null)
+            //var transaction = mapper.Map<Transaction>(transactionDto);
+            //var addedTransaction = await transactionRepository.Create(transaction);
+            // if (addedTransaction is null)
+            // {
+            //     return NotFound("Coś poszło nie tak, nie dodano transakcji");
+            // }
+            var senderClientAccount = await bankingRepository.GetById(transactionDto.Sender_BAId);
+            var recipientClientAccount = await bankingRepository.GetById(transactionDto.Recipient_BAId);
+            if (senderClientAccount is null || recipientClientAccount is null)
             {
-                return NotFound("Coś poszło nie tak, nie dodano transakcji");
+                return NotFound("Coś poszło nie tak, nie znaleziono konta");
             }
-            var addedTransactionDto = mapper.Map<TransactionDto>(addedTransaction);
+            if (senderClientAccount.Blocked || recipientClientAccount.Blocked)
+            {
+                return Unauthorized("Twoje konto jest zablokowane");
+            }
+            if (senderClientAccount.Amount < transactionDto.Amount)
+            {
+                return Unauthorized("Saldo konta jest niższe niż podana kwota");
+            }
+            if (transactionDto.Amount <= 0)
+            {
+                return Unauthorized("Kwota przelewu nie może być niższa, bądź równa 0");
+            }
+            if (senderClientAccount.Id == recipientClientAccount.Id)
+            {
+                return Unauthorized("Nie możesz wysłać przelewu do samego siebie");
+            }
+
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid(),
+                Balance_before = transactionDto.Balance_before,
+                Amount = transactionDto.Amount,
+                Title = transactionDto.Title,
+                Sender_BAId = transactionDto.Sender_BAId,
+                Sender = senderClientAccount,
+                Recipient_BAId = transactionDto.Recipient_BAId,
+                Recipient = recipientClientAccount
+            };
+            await transactionRepository.Create(transaction);
+            await transactionRepository.DoTransfer(senderClientAccount, recipientClientAccount, transactionDto.Amount);
+
+            var addedTransactionDto = mapper.Map<TransactionDto>(transaction);
             return Ok(addedTransactionDto);
         }
 

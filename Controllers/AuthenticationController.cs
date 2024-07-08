@@ -22,14 +22,16 @@ namespace ProjektTabAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthenticationController> _logger;
         private static readonly bool _is2FAEnabled = false;
+        private readonly ILoginRepository _loginRepository;
 
-        public AuthenticationController(IMapper mapper, IClientRepository clientRepository, IVerificationCodeRepository verificationCodeRepository, IConfiguration configuration, ILogger<AuthenticationController> logger)
+        public AuthenticationController(IMapper mapper, IClientRepository clientRepository, ILoginRepository loginRepository, IVerificationCodeRepository verificationCodeRepository, IConfiguration configuration, ILogger<AuthenticationController> logger)
         {
             _mapper = mapper;
             _clientRepository = clientRepository;
             _verificationCodeRepository = verificationCodeRepository;
             _configuration = configuration;
             _logger = logger;
+            _loginRepository = loginRepository;
         }
 
         [HttpPost]
@@ -64,15 +66,27 @@ namespace ProjektTabAPI.Controllers
 
                     // Send email with the code
                     SendVerificationCodeByEmail(foundClient.Email, verificationCode);
-
+                    Login login = new Login();
+                    login.Id_Client = foundClient.Id;
+                    login.DateTime = DateTime.Now;
+                    login.Successful = true;
+                    login.Client = foundClient;
+                    await _loginRepository.Create(login);
                     // Return message for 2FA
                     return Ok($"Wysłano na twoją skrzynkę pocztową {foundClient.Email} wiadomość. Przepisz otrzymane cyfry aby kontynuować.");
                 }
                 else
                 {
+
                     var foundClientDto = _mapper.Map<ClientSimpleDto>(foundClient);
                     foundClient.NumberOfTries = 0;
                     await _clientRepository.SaveChangesAsync();
+                    Login login = new Login();
+                    login.Id_Client = foundClient.Id;
+                    login.DateTime = DateTime.Now;
+                    login.Successful = true;
+                    login.Client = foundClient;
+                    await _loginRepository.Create(login);
                     return Ok(foundClientDto);
                 }
             }
@@ -80,6 +94,12 @@ namespace ProjektTabAPI.Controllers
             {
                 foundClient.NumberOfTries++;
                 await _clientRepository.SaveChangesAsync();
+                Login login = new Login();
+                login.Id_Client = foundClient.Id;
+                login.DateTime = DateTime.Now;
+                login.Successful = false;
+                login.Client = foundClient;
+                await _loginRepository.Create(login);
                 return BadRequest($"Niepoprawne hasło pozostało {5 - foundClient.NumberOfTries} prób logowania.");
             }
         }
@@ -110,7 +130,7 @@ namespace ProjektTabAPI.Controllers
                     Subject = "Your verification code",
                     Body = $"Your verification code is {code}",
                     IsBodyHtml = true,
-            };
+                };
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
             }
