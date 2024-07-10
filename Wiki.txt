@@ -1,7 +1,7 @@
 Clients:
 	id: a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536
 	name: Lukasz
-	email: lukasz@wp.pl
+	email: lukjpl@wp.pl
 	login: lukasz
 	password: lukasz
 	surname: Jarzab

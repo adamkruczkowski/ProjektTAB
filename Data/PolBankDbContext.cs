@@ -60,7 +60,7 @@ namespace ProjektTabAPI.Data
                 {
                     Id = Guid.Parse("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"),
                     Name = "Lukasz",
-                    Email = "lukasz@wp.pl",
+                    Email = "lukjpl@wp.pl",
                     Login = "lukasz",
                     Password = "lukasz",
                     Age = 23,
@@ -127,6 +127,7 @@ namespace ProjektTabAPI.Data
                     Recipient_BAId = Guid.Parse("e3df980b-f905-4595-b3ac-3ac2b1b7c4ca"), // Jan
                     Balance_before = 200.00m,
                     Amount = 100.00m,
+                    CreatedAt = DateTime.Now,
                     Title = "Impreza urodzinowa"
                 }
             };

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjektTabAPI.Data;
 
@@ -11,9 +12,11 @@ using ProjektTabAPI.Data;
 namespace ProjektTabAPI.Migrations
 {
     [DbContext(typeof(PolBankDbContext))]
-    partial class PolBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710061818_changed lukaszs email")]
+    partial class changedlukaszsemail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,7 +166,7 @@ namespace ProjektTabAPI.Migrations
                         new
                         {
                             Id = new Guid("377c0de6-fefe-4169-b42f-3ffbc70c9965"),
-                            DateTime = new DateTime(2024, 7, 10, 8, 38, 52, 808, DateTimeKind.Local).AddTicks(9842),
+                            DateTime = new DateTime(2024, 7, 10, 8, 18, 17, 350, DateTimeKind.Local).AddTicks(3884),
                             Id_Client = new Guid("a257e3d3-eea9-47ef-a8dc-1c8dbc7a6536"),
                             Successful = true
                         });
@@ -180,9 +183,6 @@ namespace ProjektTabAPI.Migrations
 
                     b.Property<decimal>("Balance_before")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("Recipient_BAId")
                         .HasColumnType("uniqueidentifier");
@@ -208,7 +208,6 @@ namespace ProjektTabAPI.Migrations
                             Id = new Guid("94a62f27-05c6-4308-b5cf-b23ef5a33ee8"),
                             Amount = 100.00m,
                             Balance_before = 200.00m,
-                            CreatedAt = new DateTime(2024, 7, 10, 8, 38, 52, 808, DateTimeKind.Local).AddTicks(9920),
                             Recipient_BAId = new Guid("e3df980b-f905-4595-b3ac-3ac2b1b7c4ca"),
                             Sender_BAId = new Guid("a099766e-075e-4696-91ed-3fa39c745051"),
                             Title = "Impreza urodzinowa"

@@ -21,7 +21,7 @@ namespace ProjektTabAPI.Controllers
         private readonly IVerificationCodeRepository _verificationCodeRepository;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthenticationController> _logger;
-        private static readonly bool _is2FAEnabled = false;
+        private static readonly bool _is2FAEnabled = true;
         private readonly ILoginRepository _loginRepository;
 
         public AuthenticationController(IMapper mapper, IClientRepository clientRepository, ILoginRepository loginRepository, IVerificationCodeRepository verificationCodeRepository, IConfiguration configuration, ILogger<AuthenticationController> logger)

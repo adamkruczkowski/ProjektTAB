@@ -78,6 +78,7 @@ namespace ProjektTabAPI.Controllers
                 Title = transactionDto.Title,
                 Sender_BAId = transactionDto.Sender_BAId,
                 Sender = senderClientAccount,
+                CreatedAt = DateTime.Now,
                 Recipient_BAId = transactionDto.Recipient_BAId,
                 Recipient = recipientClientAccount
             };
@@ -97,6 +98,7 @@ namespace ProjektTabAPI.Controllers
             {
                 return NotFound();
             }
+            transactions.Sort((x, y) => DateTime.Compare(y.CreatedAt, x.CreatedAt));
             var transactionsDto = mapper.Map<List<TransactionDto>>(transactions);
             return Ok(transactionsDto);
         }
