@@ -27,10 +27,13 @@ namespace ProjektTabAPI.Repositories
         public async Task<string?> GetVerificationCode(Guid clientId)
         {
             var verificationCode = await _dbContext.VerificationCodes
-                .FirstOrDefaultAsync(vc => vc.ClientId == clientId && vc.ExpirationTime > DateTime.Now);
+                .Where(vc => vc.ClientId == clientId && vc.ExpirationTime > DateTime.Now)
+                .OrderByDescending(vc => vc.ExpirationTime) // Order by most recent expiration time
+                .FirstOrDefaultAsync();
 
             return verificationCode?.Code;
         }
+
 
     }
 }
